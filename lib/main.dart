@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() => runApp(const ProfileCardApp());
 
@@ -17,24 +18,30 @@ class ProfileCardApp extends StatelessWidget {
       );
 }
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
   @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  bool _dark = false;
+  @override
   Widget build(BuildContext context) => Scaffold(
-        backgroundColor: const Color(0xFFF1F5F9),
-        appBar: AppBar(title: const Text('My Profile'), centerTitle: true),
+        backgroundColor: _dark ? const Color(0xFF111827) : const Color(0xFFF1F5F9),
+        appBar: AppBar(title: const Text('My Profile'), centerTitle: true, actions: [IconButton(tooltip: _dark ? 'Use light theme' : 'Use dark theme', onPressed: () => setState(() => _dark = !_dark), icon: Icon(_dark ? Icons.light_mode : Icons.dark_mode))]),
         body: Center(
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(20),
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 360),
-              child: Card(
+              child: Card(color: _dark ? const Color(0xFF1F2937) : null,
                 elevation: 3,
                 clipBehavior: Clip.antiAlias,
                 child: Padding(
                   padding: const EdgeInsets.all(24),
-                  child: Column(
+                  child: DefaultTextStyle.merge(style: TextStyle(color: _dark ? Colors.white : null), child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const CircleAvatar(
@@ -52,7 +59,7 @@ class ProfileScreen extends StatelessWidget {
                       const ContactRow(icon: Icons.phone_outlined, label: 'Phone', value: '+1 555 010 2030'),
                       const ContactRow(icon: Icons.location_on_outlined, label: 'City', value: 'Chennai, India'),
                     ],
-                  ),
+                  )),
                 ),
               ),
             ),
@@ -77,6 +84,7 @@ class ContactRow extends StatelessWidget {
             const SizedBox(width: 12),
             Text('$label  ', style: const TextStyle(fontWeight: FontWeight.w600)),
             Expanded(child: Text(value, textAlign: TextAlign.end, overflow: TextOverflow.ellipsis)),
+            IconButton(tooltip: 'Copy $label', icon: const Icon(Icons.copy, size: 18), onPressed: () async { await Clipboard.setData(ClipboardData(text: value)); if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$label copied'))); }),
           ],
         ),
       );

@@ -19,3 +19,7 @@ For a local run, install Flutter, run `flutter create --platforms=web .` once, t
 - Uses a reusable `ContactRow` widget and fictional contact details.
 - Centers the card, constrains its width, and allows scrolling on narrow screens.
 - Test with `flutter test`; GitHub Actions analyzes, tests, builds, and publishes the web preview.
+
+## Extended features
+
+See [docs/FEATURES.md](docs/FEATURES.md) for the enhancement list, source layout, and a quick demo checklist.
